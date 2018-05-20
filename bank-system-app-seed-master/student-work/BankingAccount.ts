@@ -5,6 +5,7 @@ import {TransactionOrigin} from "../common/enums/TransactionOrigin";
 
 export class BankingAccount implements Account{
     accountHistory: Transaction[];
+    transactionNumber: number;
 
 
     constructor(public balance: number, public currentDate: Date, public accountType: string){
@@ -13,7 +14,7 @@ export class BankingAccount implements Account{
         this.accountType = accountType;
     }
     withdrawMoney(amount: number, description: string, transactionOrigin: TransactionOrigin): Transaction {
-        ;
+
         let withdrawl: Transaction =
             {
                 success: true,
@@ -37,14 +38,18 @@ export class BankingAccount implements Account{
 
 
          if (this.accountType === "savings" && this.balance >= amount && transactionOrigin !== TransactionOrigin.BRANCH) {
-             if () {
+             let futureStamp: number = new Date().getTime() + (30 * 24 * 60 * 60 * 1000);
+             let currentStamp: number = this.currentDate.setMonth(this.currentDate.getMonth(), this.currentDate.getDate());
+             if (futureStamp < currentStamp && this.transactionNumber < 6) {
+                 this.transactionNumber += 1;
                  this.balance -= amount;
                  withdrawl.resultBalance = this.balance;
                  withdrawl.success = true;
                  this.accountHistory.push(withdrawl);
              }
-         } else if (this.accountType ==="savings") {
+         } else if (this.transactionNumber === 7) {
             withdrawl.success = false;
+            this.transactionNumber = 0;
          }
 
 
@@ -67,7 +72,8 @@ export class BankingAccount implements Account{
     }
 
     advanceDate(numberOfDays: number) {
-        this.currentDate.setDate(this.currentDate.getDate() + numberOfDays);
+        let futureDate = this.currentDate.setDate(this.currentDate.getDate() + numberOfDays);
+        return futureDate;
     }
 
 }

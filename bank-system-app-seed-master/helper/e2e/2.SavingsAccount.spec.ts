@@ -1,7 +1,7 @@
 import {AccountFactory} from "../AccountFactory";
 import {TransactionOrigin} from "../../common/enums/TransactionOrigin";
 
-fdescribe("A savings account", () => {
+describe("A savings account", () => {
     it("calculates interest correctly with no deposits in between (Savings Account Requirement #1)", () => {
         let savings = AccountFactory.getSavingsAccountObject(new Date(2000, 0, 1));
         expect(savings.balance).toBe(10000);
