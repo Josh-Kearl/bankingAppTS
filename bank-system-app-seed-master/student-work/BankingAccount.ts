@@ -15,7 +15,7 @@ export class BankingAccount implements Account{
     }
     withdrawMoney(amount: number, description: string, transactionOrigin: TransactionOrigin): Transaction {
 
-        let withdrawl: Transaction =
+        let withdrawal: Transaction =
             {
                 success: true,
                 amount: amount,
@@ -27,13 +27,13 @@ export class BankingAccount implements Account{
 
 
 
-        if (this.balance >= amount && transactionOrigin === TransactionOrigin.BRANCH && withdrawl.success === true) {
+        if (this.balance >= amount && withdrawal.success === true) {
             this.balance -= amount;
-            withdrawl.resultBalance = this.balance;
-            withdrawl.success = true;
+            withdrawal.resultBalance = this.balance;
+            withdrawal.success = true;
 
         } else {
-            withdrawl.success = false;
+            withdrawal.success = false;
         }
 
 
@@ -43,17 +43,17 @@ export class BankingAccount implements Account{
              if (futureStamp < currentStamp && this.transactionNumber < 6) {
                  this.transactionNumber += 1;
                  this.balance -= amount;
-                 withdrawl.resultBalance = this.balance;
-                 withdrawl.success = true;
-                 this.accountHistory.push(withdrawl);
+                 withdrawal.resultBalance = this.balance;
+                 withdrawal.success = true;
+                 this.accountHistory.push(withdrawal);
              }
          } else if (this.transactionNumber === 7) {
-            withdrawl.success = false;
+            withdrawal.success = false;
             this.transactionNumber = 0;
          }
 
 
-        return withdrawl;
+        return withdrawal;
 
     }
 
