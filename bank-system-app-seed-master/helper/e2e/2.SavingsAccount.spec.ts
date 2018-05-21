@@ -71,9 +71,9 @@ describe("A savings account", () => {
         expect(savings.balance).toBe(currentBal);
 
         savings.advanceDate(5);
-        let eigth = savings.withdrawMoney(10, "test 8", TransactionOrigin.PHONE);
+        let eighth = savings.withdrawMoney(10, "test 8", TransactionOrigin.PHONE);
         expect(savings.balance).toBeCloseTo(9946.57);
-        expect(eigth.success).toBeTruthy("On test 8");
+        expect(eighth.success).toBeTruthy("On test 8");
     });
     it("allows virtually an unlimited number of withdrawals (1000) at the branch as long as enough balance is available (Savings Account Requirement #5)", () => {
         let savings = AccountFactory.getSavingsAccountObject(new Date(2000, 0, 1));

@@ -5,13 +5,13 @@ import {TransactionOrigin} from "../common/enums/TransactionOrigin";
 
 export class BankingAccount implements Account{
     accountHistory: Transaction[];
-    transactionNumber: number;
 
 
     constructor(public balance: number, public currentDate: Date, public accountType: string){
         this.balance = balance;
         this.currentDate = currentDate;
         this.accountType = accountType;
+        this.accountHistory = [];
     }
     withdrawMoney(amount: number, description: string, transactionOrigin: TransactionOrigin): Transaction {
 
@@ -27,31 +27,32 @@ export class BankingAccount implements Account{
 
 
 
-        if (this.balance >= amount && withdrawal.success === true) {
+        if (this.balance >= amount && this.accountType ==="checking") {
             this.balance -= amount;
             withdrawal.resultBalance = this.balance;
             withdrawal.success = true;
+            this.accountHistory.push({
+                success: true,
+                amount: amount,
+                resultBalance: this.balance,
+                description: description,
+                transactionDate: this.currentDate,
+                errorMessage: ""
+            })
 
-        } else {
+        } else if(this.balance < amount && this.accountType ==="checking") {
             withdrawal.success = false;
+
+            this.accountHistory.push({
+                success: withdrawal.success,
+                amount: amount,
+                resultBalance: this.balance,
+                description: description,
+                transactionDate: this.currentDate,
+                errorMessage: "Sorry there is not enough in balance for this transaction"
+
+            })
         }
-
-
-         if (this.accountType === "savings" && this.balance >= amount && transactionOrigin !== TransactionOrigin.BRANCH) {
-             let futureStamp: number = new Date().getTime() + (30 * 24 * 60 * 60 * 1000);
-             let currentStamp: number = this.currentDate.setMonth(this.currentDate.getMonth(), this.currentDate.getDate());
-             if (futureStamp < currentStamp && this.transactionNumber < 6) {
-                 this.transactionNumber += 1;
-                 this.balance -= amount;
-                 withdrawal.resultBalance = this.balance;
-                 withdrawal.success = true;
-                 this.accountHistory.push(withdrawal);
-             }
-         } else if (this.transactionNumber === 7) {
-            withdrawal.success = false;
-            this.transactionNumber = 0;
-         }
-
 
         return withdrawal;
 
@@ -61,19 +62,32 @@ export class BankingAccount implements Account{
         let deposit: Transaction = {
             success: true,
             amount: amount,
-            resultBalance: this.balance,
+            resultBalance: this.balance += amount,
             description: description,
             transactionDate: this.currentDate,
-            errorMessage: "Sorry there is not enough in balance for this transaction"
+            errorMessage: ""
         };
 
-        this.balance += deposit.amount;
+        this.accountHistory.push(deposit);
+
+
         return deposit;
     }
 
     advanceDate(numberOfDays: number) {
-        let futureDate = this.currentDate.setDate(this.currentDate.getDate() + numberOfDays);
-        return futureDate;
+    }
+
+    calculateInt (numberOfDays:number, rate: number) {
+        for (let i = 1; i <= numberOfDays; i++) {
+
+            this.currentDate.setDate(this.currentDate.getDate() + 1);
+
+            if (this.currentDate.getDate() === 1) {
+                let interestDeposit = this.balance * rate / 12;
+                let roundedDeposit = Math.round(interestDeposit * 100) / 100;
+                this.depositMoney(roundedDeposit, "Monthly Interest");
+            }
+        }
     }
 
 }

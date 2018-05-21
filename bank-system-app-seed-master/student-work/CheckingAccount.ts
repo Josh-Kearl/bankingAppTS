@@ -14,4 +14,10 @@ export class CheckingAccount extends BankingAccount{
         this.accountType = accountType;
     }
 
+    advanceDate(numberOfDays: number){
+        super.calculateInt(numberOfDays, .01);
+
+
+    }
+
 }
