@@ -2,7 +2,7 @@ import {TransactionOrigin} from "../../common/enums/TransactionOrigin";
 import {AccountFactory} from "../AccountFactory";
 import {Account} from "../../common/interfaces/Account";
 
-fdescribe("A retirement account", () => {
+describe("A retirement account", () => {
     it("gets initialized with the correct balance (Retirement Account Requirement #1)", () => {
         let retirement = createRetirementAccount();
         expect(retirement.balance).toBe(100000);
